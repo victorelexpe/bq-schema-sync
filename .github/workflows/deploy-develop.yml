@@ -50,6 +50,7 @@ jobs:
     name: Publish Python 🐍 distribution 📦 to TestPyPI
     needs: build
     runs-on: ubuntu-latest
+    environment: develop
 
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
