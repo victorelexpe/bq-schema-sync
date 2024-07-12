@@ -1,54 +1,13 @@
-import os
-import yaml
 import argparse
 import logging
+import yaml
 from google.cloud import bigquery
 from google.api_core.exceptions import GoogleAPIError
 from bq_schema_sync.schema_sync import SchemaSync
+from bq_schema_sync.utils import setup_logging, load_config, init_config, validate_config
 
 # Set up logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-def load_config(config_path):
-    # Determine the environment
-    environment = os.getenv('ENVIRONMENT', 'develop')
-
-    # Load the appropriate configuration file
-    config_file = f'{os.path.splitext(config_path)[0]}.{environment}.yaml'
-    with open(config_file, 'r') as file:
-        config = yaml.safe_load(file)
-
-    return config
-
-def init_config():
-    template_config = {
-        'project_id': 'your-gcp-project-id',
-        'dataset_id': 'your-dataset-id',
-        'table_id': 'your-table-id',
-        # 'service_account_key_path': '/path/to/service-account-key.json',
-        'schema': {
-            'fields': [
-                {'name': 'id', 'type': 'STRING', 'mode': 'REQUIRED', 'description': 'Unique identifier'},
-                {'name': 'created_at', 'type': 'TIMESTAMP', 'mode': 'NULLABLE', 'description': 'Record creation timestamp'}
-            ]
-        }
-    }
-
-    with open('config.develop.yaml', 'w') as file:
-        yaml.dump(template_config, file, default_flow_style=False)
-    with open('config.main.yaml', 'w') as file:
-        yaml.dump(template_config, file, default_flow_style=False)
-    logger.info("Template config.develop.yaml and config.main.yaml created successfully.")
-
-def validate_config(config):
-    required_fields = ['project_id', 'dataset_id', 'table_id', 'schema']
-    for field in required_fields:
-        if field not in config:
-            raise ValueError(f"Missing required configuration field: {field}")
-
-    if 'fields' not in config['schema']:
-        raise ValueError("Missing 'fields' in schema configuration")
+logger = setup_logging()
 
 def main():
     parser = argparse.ArgumentParser(description='BigQuery Schema Sync Tool')
