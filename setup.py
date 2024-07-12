@@ -7,7 +7,7 @@ long_description = readme_path.read_text() if readme_path.is_file() else ""
 
 setup(
     name='bq-schema-sync',
-    version='0.1.1',  # Updated version number
+    version='0.1.2',  # Updated version number
     packages=find_packages(),
     include_package_data=True,  # Include package data specified in MANIFEST.in
     install_requires=[
