@@ -1,5 +1,6 @@
-import argparse
+import os
 import yaml
+import argparse
 import logging
 from google.cloud import bigquery
 from google.api_core.exceptions import GoogleAPIError
@@ -8,6 +9,17 @@ from bq_schema_sync.schema_sync import SchemaSync
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+def load_config(config_path):
+    # Determine the environment
+    environment = os.getenv('ENVIRONMENT', 'develop')
+
+    # Load the appropriate configuration file
+    config_file = f'{os.path.splitext(config_path)[0]}.{environment}.yaml'
+    with open(config_file, 'r') as file:
+        config = yaml.safe_load(file)
+
+    return config
 
 def init_config():
     template_config = {
@@ -23,9 +35,11 @@ def init_config():
         }
     }
 
-    with open('config.yaml', 'w') as file:
+    with open('config.develop.yaml', 'w') as file:
         yaml.dump(template_config, file, default_flow_style=False)
-    logger.info("Template config.yaml created successfully.")
+    with open('config.main.yaml', 'w') as file:
+        yaml.dump(template_config, file, default_flow_style=False)
+    logger.info("Template config.develop.yaml and config.main.yaml created successfully.")
 
 def validate_config(config):
     required_fields = ['project_id', 'dataset_id', 'table_id', 'schema']
@@ -88,8 +102,7 @@ def main():
         elif args.command == 'init':
             init_config()
         else:
-            with open(args.config, 'r') as file:
-                config = yaml.safe_load(file)
+            config = load_config(args.config)
 
             try:
                 validate_config(config)
@@ -149,6 +162,7 @@ def main():
         logger.error(f"Google API error: {e}")
     except Exception as e:
         logger.error(f"An unexpected error occurred: {e}")
+
 
 if __name__ == '__main__':
     main()
