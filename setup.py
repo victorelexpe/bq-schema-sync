@@ -1,15 +1,17 @@
 from setuptools import setup, find_packages
-from pathlib import Path
 
-# Read the contents of README file
-readme_path = Path(__file__).parent / "README.md"
-long_description = readme_path.read_text() if readme_path.is_file() else ""
+# Dynamically calculate the version based on semantic-release
+try:
+    from semantic_release.version import get_version
+    version = get_version()
+except ImportError:
+    version = '0.0.0'
 
 setup(
     name='bq-schema-sync',
-    version='0.1.6',  # Incremented version number
+    version=version,
     packages=find_packages(),
-    include_package_data=True,  # Include package data specified in MANIFEST.in
+    include_package_data=True,
     install_requires=[
         'google-cloud-bigquery>=2.0.0',
         'google-api-core>=1.22.0',
@@ -21,7 +23,7 @@ setup(
         ],
     },
     description='A tool to synchronize BigQuery table schemas with local definitions',
-    long_description=long_description,
+    long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     author='Victor Hasim Elexpe Ahamri',
     author_email='your.email@example.com',
