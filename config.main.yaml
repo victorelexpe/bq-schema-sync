@@ -1,5 +1,5 @@
-dataset_id: your-dataset-id
-project_id: your-gcp-project-id
+dataset_id: your-prod-dataset-id
+project_id: your-prod-gcp-project-id
 schema:
   fields:
   - description: Unique identifier
@@ -10,4 +10,4 @@ schema:
     mode: NULLABLE
     name: created_at
     type: TIMESTAMP
-table_id: your-table-id
+table_id: your-prod-table-id
