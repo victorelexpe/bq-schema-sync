@@ -53,7 +53,7 @@ jobs:
     environment: develop
 
     permissions:
-      id-token: write  # IMPORTANT: mandatory for trusted publishing
+      id-token: write
 
     steps:
     - name: Check out repository

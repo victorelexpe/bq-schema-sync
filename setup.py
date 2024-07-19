@@ -5,7 +5,7 @@ try:
     from semantic_release.version import get_version
     version = get_version()
 except ImportError:
-    version = '0.1.11'
+    version = '0.1.12'
 
 setup(
     name='bq-schema-sync',
